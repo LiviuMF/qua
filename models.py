@@ -5,7 +5,7 @@ class Product:
     article_id: str
     item_no: str
     description: str
-    um: int
+    um: str
     qty: int
     price: float
     total_price: float
