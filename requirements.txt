@@ -1,0 +1,2 @@
+pdfplumber==0.11.4
+streamlit==1.37.1
