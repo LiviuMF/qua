@@ -12,6 +12,7 @@ PROVIDER_MAPPING = {
     'silko': Silko,
 }
 
+st.set_page_config(page_title='Invoice product extractor', page_icon='favicon.ico')
 st.title("Extract products from invoice")
 
 provider = st.selectbox('Please select provider below', PROVIDER_MAPPING.keys())
