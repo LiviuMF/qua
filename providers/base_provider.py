@@ -12,6 +12,7 @@ class BaseProvider:
     PRODUCT_ROW_LENGTH = 8
     EXCLUDED_LINES = (
         START_TEXT_FOR_PRODUCTS,
+        END_TEXT_FOR_PRODUCTS,
         "Delivery address",
         "Delivery note",
         "____________",
