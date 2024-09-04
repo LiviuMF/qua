@@ -8,6 +8,38 @@ from models import Product
 class BaseProvider:
     START_TEXT_FOR_PRODUCTS = "Cod. Description of goods / product description price amount code"
     END_TEXT_FOR_PRODUCTS = "Payment discount:"
+    PRODUCT_ID_PATTERN = r"000\d{2}"
+    PRODUCT_ROW_LENGTH = 8
+    EXCLUDED_LINES = (
+        START_TEXT_FOR_PRODUCTS,
+        "Delivery address",
+        "Delivery note",
+        "____________",
+
+        "La Vs. Ragione Sociale",
+        "fattura sono quelli",
+        "sede di conferimento di",
+        "Vi preghiamo di comunicarce",
+        "responsabilità in caso di",
+        "pagamenti non effettuati alla",
+        "bancari correnti per il periodo",
+        "Dichiaro sotto la mia piena responsabilit",
+        "vigenti disposizioni valutarie",
+        "e, pertanto, nessuna altra",
+        "va a favore o a carico dell",
+
+        'Item',
+        'Delivery address:',
+        'Code ',
+        'ATT HORECA CONSULT SRL',
+        '(Mrs Andreea Mitran)',
+        'str Padurii nr 1a ap 8',
+        'RO-407280 Floresti - CLUJ',
+        'Romania',
+        'Delivery note ',
+        'Order ',
+        'PO number '
+    )
 
     def __init__(self, pdf_file):
         self.pdf_file = pdf_file
@@ -19,50 +51,43 @@ class BaseProvider:
             if word in line:
                 return lines.index(line)
 
-    @staticmethod
-    def is_product_id(word: str):
-        return bool(re.search(r'000\d{2}0', word))
+    def is_product_row(
+            self,
+            row: str,
+    ) -> bool:
+        line_items = row.split()
+        first_2_words = " ".join(line_items[:2])
+
+        is_product_id = bool(re.search(self.PRODUCT_ID_PATTERN, first_2_words))
+        return is_product_id and len(line_items) == self.PRODUCT_ROW_LENGTH
 
     def szplit_products(self, product_lines: list) -> list:
-        all_products = []
+        all_products = [[]]
         for line in product_lines:
-            if self.is_product_id(line.split()[0]):
+            if self.is_product_row(row=line):
                 all_products.append([])
             all_products[-1].append(line)
 
-        return all_products
+        return all_products[1:]
 
     def remove_lines_from_top_or_bottom(
             self,
             pg_lines: list,
             remove_top: bool = True
     ) -> list:
-        skip_by_index = 0
+        cleaned_products = []
         for pg_line in pg_lines:
-            if any((message in pg_line for message in (
-                    self.START_TEXT_FOR_PRODUCTS,
-                    "Delivery address",
-                    "Delivery note",
-                    "____________",
+            skip_by_index = 0
+            for item in pg_line:
+                if any((message in item for message in self.EXCLUDED_LINES)):
+                    skip_by_index += 1
+                    product_line = pg_line[skip_by_index:] if remove_top else pg_line[:skip_by_index * -1]
+                else:
+                    product_line = pg_line
 
-                    "La Vs. Ragione Sociale",
-                    "fattura sono quelli",
-                    "sede di conferimento di",
-                    "Vi preghiamo di comunicarce",
-                    "responsabilità in caso di",
-                    "pagamenti non effettuati alla",
-                    "bancari correnti per il periodo",
-                    "Dichiaro sotto la mia piena responsabilit",
-                    "vigenti disposizioni valutarie",
-                    "e, pertanto, nessuna altra",
-                    "va a favore o a carico dell",
+            cleaned_products.append(product_line)
+        return cleaned_products
 
-            ))):
-                skip_by_index += 1
-        if remove_top:
-            return pg_lines[skip_by_index:]
-        else:
-            return pg_lines[:skip_by_index * -1]
 
     def fetch_invoice_details(self) -> tuple:
         invoice_details = self.first_page.extract_table()
@@ -88,6 +113,7 @@ class BaseProvider:
                 all_product_lines = page_lines[start_index:end_index]
                 all_products_no_headers = self.remove_lines_from_top_or_bottom(all_product_lines)
                 products = self.szplit_products(all_products_no_headers)
+
                 invoice_date, invoice_nr = self.fetch_invoice_details()
 
                 for product in products:

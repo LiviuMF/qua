@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 
 from providers.lainox import Lainox
 from providers.silko import Silko
@@ -46,7 +47,7 @@ if document:
         file_name=f'{document_name}.csv'
     )
 
-euro_date = st.date_input('Please select date for euro rate')
+euro_date = st.date_input('Please select date for euro rate', max_value=datetime.now().date())
 if st.button('Get rate'):
     euro_value = provider_class.fetch_euro_value_for_date(euro_date.isoformat())
     st.success(euro_value)
