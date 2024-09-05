@@ -60,9 +60,12 @@ class BaseProvider:
         first_2_words = " ".join(line_items[:2])
 
         is_product_id = bool(re.search(self.PRODUCT_ID_PATTERN, first_2_words))
-        return is_product_id and len(line_items) == self.PRODUCT_ROW_LENGTH
+        return is_product_id and len(line_items) >= self.PRODUCT_ROW_LENGTH
 
-    def szplit_products(self, product_lines: list) -> list:
+    def szplit_products(
+            self,
+            product_lines: list
+    ) -> list:
         all_products = [[]]
         for line in product_lines:
             if self.is_product_row(row=line):
@@ -89,8 +92,7 @@ class BaseProvider:
             cleaned_products.append(product_line)
         return cleaned_products
 
-
-    def fetch_invoice_details(self) -> tuple:
+    def fetch_invoice_date_and_number(self) -> tuple:
         invoice_details = self.first_page.extract_table()
         date_and_invoice_nr = invoice_details[1][0]
 
@@ -102,8 +104,23 @@ class BaseProvider:
         except AttributeError:
             print('Date or invoice number could not be extracted with formats XX.XX.XXX | XXX/XXXXXXXXX')
 
+    def process_product_details(self, product_details: list):
+        all_products = []
+        invoice_date, invoice_nr = self.fetch_invoice_date_and_number()
+
+        for product in product_details:
+            p = Product(
+                *(product[0].split()),
+                invoice_date,
+                invoice_nr
+            )
+            p.description = f'{p.description}  {" ".join(product[1:])}'
+            p.um = p.um.replace('EA', 'BUC')
+            all_products.append(p)
+
+        return all_products
+
     def extract_products(self):
-        all_articles = []
         for page in self.pdf_file.pages:
 
             extracted_text = page.extract_text()
@@ -114,22 +131,11 @@ class BaseProvider:
                 all_product_lines = page_lines[start_index:end_index]
                 all_products_no_headers = self.remove_lines_from_top_or_bottom(all_product_lines)
                 products = self.szplit_products(all_products_no_headers)
-
-                invoice_date, invoice_nr = self.fetch_invoice_details()
-
-                for product in products:
-                    p = Product(
-                        *(product[0].split()),
-                        invoice_date,
-                        invoice_nr
-                    )
-                    p.description = f'{p.description}  {" ".join(product[1:])}'
-                    p.um = p.um.replace('EA', 'BUC')
-                    all_articles.append(p)
+                all_products = self.process_product_details(products)
             else:
                 continue
 
-        return all_articles
+        return all_products
 
     @staticmethod
     def fetch_euro_value_for_date(euro_date):
