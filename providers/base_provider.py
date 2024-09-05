@@ -115,12 +115,12 @@ class BaseProvider:
                 invoice_nr
             )
             p.description = f'{p.description}  {" ".join(product[1:])}'
-            p.um = p.um.replace('EA', 'BUC')
+            p.um = 'BUC'
             all_products.append(p)
-
         return all_products
 
     def extract_products(self):
+        all_products = []
         for page in self.pdf_file.pages:
 
             extracted_text = page.extract_text()
@@ -131,7 +131,7 @@ class BaseProvider:
                 all_product_lines = page_lines[start_index:end_index]
                 all_products_no_headers = self.remove_lines_from_top_or_bottom(all_product_lines)
                 products = self.szplit_products(all_products_no_headers)
-                all_products = self.process_product_details(products)
+                all_products.extend(self.process_product_details(products))
             else:
                 continue
 

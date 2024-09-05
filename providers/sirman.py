@@ -47,7 +47,6 @@ class Sirman(BaseProvider):
                         row_nr=product[0],
                         item_no=product[1],
                         description="",
-                        um=product[3],
                         qty=product[2],
                         price="".join(product[4:6]),
                         total_price=product[6],
@@ -56,7 +55,6 @@ class Sirman(BaseProvider):
                         invoice_nr=invoice_nr,
                     )
                     p.description = p.description + " ".join(product_row[1:])
-                    p.um = p.um.replace('PC', 'BUC')
                     all_articles.append(p)
             else:
                 continue

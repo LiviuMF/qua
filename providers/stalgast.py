@@ -30,7 +30,6 @@ class Stalgast(BaseProvider):
                 row_nr=product[0],
                 item_no=product[1],
                 description=" ".join(product[2:-9]),
-                um=product[-8],
                 qty=product[-9],
                 price=product[-7],
                 total_price=product[-1],
@@ -39,7 +38,6 @@ class Stalgast(BaseProvider):
                 invoice_nr=invoice_nr,
             )
             p.description = f'{p.description}  {" ".join(product_row[1:])}'
-            p.um = p.um.replace('Szt', 'BUC')
             all_products.append(p)
 
         return all_products
