@@ -4,6 +4,7 @@ from datetime import datetime
 from providers.lainox import Lainox
 from providers.silko import Silko
 from providers.sirman import Sirman
+from providers.ali_parts import AliParts
 
 import pdfplumber
 import streamlit as st
@@ -13,6 +14,7 @@ PROVIDER_MAPPING = {
     'lainox': Lainox,
     'silko': Silko,
     'sirman': Sirman,
+    'ali_parts': AliParts,
 }
 
 st.set_page_config(page_title='Invoice product extractor', page_icon='favicon.ico')

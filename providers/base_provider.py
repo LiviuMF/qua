@@ -123,7 +123,7 @@ class BaseProvider:
                         invoice_date,
                         invoice_nr
                     )
-                    p.description = p.description + " ".join(product[1:])
+                    p.description = f'{p.description}  {" ".join(product[1:])}'
                     p.um = p.um.replace('EA', 'BUC')
                     all_articles.append(p)
             else:
