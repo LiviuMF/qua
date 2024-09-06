@@ -41,6 +41,8 @@ class BaseProvider:
         'Order ',
         'PO number ',
         'Offer no ',
+        'Rifer. D.D.T.',
+        '--Rif.Vs.ord',
     )
 
     def __init__(self, pdf_file):

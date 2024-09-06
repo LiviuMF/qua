@@ -2,9 +2,11 @@ import csv
 from datetime import datetime
 
 from providers.ali_parts import AliParts
+from providers.fimar import Fimar
 from providers.gastrometal import GastroMetal
 from providers.lainox import Lainox
 from providers.oem import Oem
+from providers.sayl import Sayl
 from providers.silko import Silko
 from providers.sirman import Sirman
 from providers.stalgast import Stalgast
@@ -15,9 +17,11 @@ import streamlit as st
 
 PROVIDER_MAPPING = {
     'ali_parts': AliParts,
+    'fimar': Fimar,
     'gastrometal': GastroMetal,
     'lainox': Lainox,
     'oem': Oem,
+    'sayl': Sayl,
     'silko': Silko,
     'sirman': Sirman,
     'stalgast': Stalgast,
