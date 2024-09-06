@@ -4,6 +4,7 @@ from datetime import datetime
 from providers.ali_parts import AliParts
 from providers.gastrometal import GastroMetal
 from providers.lainox import Lainox
+from providers.oem import Oem
 from providers.silko import Silko
 from providers.sirman import Sirman
 from providers.stalgast import Stalgast
@@ -16,6 +17,7 @@ PROVIDER_MAPPING = {
     'ali_parts': AliParts,
     'gastrometal': GastroMetal,
     'lainox': Lainox,
+    'oem': Oem,
     'silko': Silko,
     'sirman': Sirman,
     'stalgast': Stalgast,

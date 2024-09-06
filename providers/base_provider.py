@@ -39,7 +39,8 @@ class BaseProvider:
         'Romania',
         'Delivery note ',
         'Order ',
-        'PO number '
+        'PO number ',
+        'Offer no ',
     )
 
     def __init__(self, pdf_file):
