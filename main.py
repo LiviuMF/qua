@@ -2,6 +2,7 @@ import csv
 from datetime import datetime
 
 from providers.ali_parts import AliParts
+from providers.barth import Barth
 from providers.fimar import Fimar
 from providers.gastrometal import GastroMetal
 from providers.lainox import Lainox
@@ -10,6 +11,7 @@ from providers.sayl import Sayl
 from providers.silko import Silko
 from providers.sirman import Sirman
 from providers.stalgast import Stalgast
+from providers.virtus import Virtus
 
 import pdfplumber
 import streamlit as st
@@ -17,6 +19,7 @@ import streamlit as st
 
 PROVIDER_MAPPING = {
     'ali_parts': AliParts,
+    'barth': Barth,
     'fimar': Fimar,
     'gastrometal': GastroMetal,
     'lainox': Lainox,
@@ -25,6 +28,7 @@ PROVIDER_MAPPING = {
     'silko': Silko,
     'sirman': Sirman,
     'stalgast': Stalgast,
+    'virtus': Virtus,
 }
 
 
@@ -41,6 +45,11 @@ def run():
         pdf_file = pdfplumber.open(document)
 
         products = provider_class(pdf_file).extract_products()
+
+        if len(products) > 1 and provider == 'virtus':
+            st.warning(
+                'Provider is still WIP, for multiple invoice entries,please make sure data is extracted correctly'
+            )
 
         st.table(products)
 
