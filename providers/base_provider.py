@@ -2,6 +2,7 @@ import re
 
 import requests
 
+import config
 from models import Product
 
 
@@ -148,3 +149,8 @@ class BaseProvider:
             cleaned_value = re.search(r'\d\.\d{3,}', raw_value.group())
             return cleaned_value.group()
 
+
+    @staticmethod
+    def notify_telegram(message):
+        requests.post(
+            f'https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage?chat_id={config.TELEGRAM_CHAT_ID}&text={message}')

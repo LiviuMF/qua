@@ -11,7 +11,7 @@ class Virtus(BaseProvider):
     def fetch_invoice_date_and_number(self) -> tuple:
         invoice_details = self.first_page.extract_text()
         date_and_invoice_nr = re.search(
-            r'\d{2}/\d{2}/\d{4} \d{4}-\d{4}',
+            r'\d{2}/\d{2}/\d{4} \d{4}-\d{5}',
             invoice_details).group()
         date, invoice_nr = date_and_invoice_nr.split()
         return date, invoice_nr
