@@ -154,3 +154,48 @@ class BaseProvider:
     def notify_telegram(message):
         requests.post(
             f'https://api.telegram.org/bot{config.TELEGRAM_TOKEN}/sendMessage?chat_id={config.TELEGRAM_CHAT_ID}&text={message}')
+
+
+    @staticmethod
+    def create_invoice():
+        import hashlib
+        company_unique_code = "32439056"
+        private_key = "A2235B87937F185C355EFEB0CABB0538"
+        client_name = 'ATT HORECA CONSULT S.R.L.'
+        url = 'https://api.fgo.ro/v1/factura/emitere'
+        hash_string = f"{company_unique_code}{private_key}{client_name}"
+        hash_value = hashlib.sha1(hash_string.encode('utf-8')).hexdigest().upper()
+
+        invoice_data = {
+            "CodUnic": company_unique_code,
+            "Hash": hash_value,
+            "TipFactura": "Factura",
+            "Valuta": "RON",
+            "Serie": 'xx',
+            "Client": {
+                "Denumire": client_name,  # Client's name
+                "CodUnic": company_unique_code,  # Client's VAT code
+                "Email": "client@example.com",  # Client's email
+                "Telefon": "0722334455",  # Client's phone
+                "Tara": "Romania",  # Client's country
+                "Localitate": "Bucharest",  # Client's city
+                "Adresa": "123 Street Name"  # Client's address
+            },
+            "Continut": [
+                {
+                    "Denumire": "Product Name",  # Required: Item name
+                    "CodArticol": "PRD001",  # Optional: Item code for easier identification
+                    "PretUnitar": 100.00,  # Required: Unit price
+                    "PretTotal": 200.00,  # Optional: Total price (use if calculating in reverse)
+                    "NrProduse": 2.0,  # Required: Number of products
+                    "CotaTVA": 19.0,  # Required: VAT rate
+                    "UM": "BUC",  # Required: Unit of measure (e.g., BUC for pieces)
+                    "Descriere": "This is a detailed description of the product",  # Optional: Item description
+                    "CodGestiune": "MGMT123",  # Optional: Management code (if available)
+                    "CodCentruCost": "COST100"  # Optional: Cost center code (if available)
+                }
+            ],
+            "PlatformaURL": 'https://qua-providers.streamlit.app',  # Root API URL
+        }
+
+        return requests.post(url, json=invoice_data)
