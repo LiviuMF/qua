@@ -179,7 +179,8 @@ class BaseProvider:
                 "Telefon": "0722334455",  # Client's phone
                 "Tara": "Romania",  # Client's country
                 "Localitate": "Bucharest",  # Client's city
-                "Adresa": "123 Street Name"  # Client's address
+                "Adresa": "123 Street Name",
+                "Tip": 'PJ',
             },
             "Continut": [
                 {
