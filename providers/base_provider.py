@@ -192,8 +192,8 @@ class BaseProvider:
                     "CotaTVA": 19.0,  # Required: VAT rate
                     "UM": "BUC",  # Required: Unit of measure (e.g., BUC for pieces)
                     "Descriere": "This is a detailed description of the product",  # Optional: Item description
-                    "CodGestiune": "MGMT123",  # Optional: Management code (if available)
-                    "CodCentruCost": "COST100"  # Optional: Cost center code (if available)
+                    # "CodGestiune": "MGMT123",  # Optional: Management code (if available)
+                    # "CodCentruCost": "COST100"  # Optional: Cost center code (if available)
                 }
             ],
             "PlatformaURL": 'https://qua-providers.streamlit.app',  # Root API URL
