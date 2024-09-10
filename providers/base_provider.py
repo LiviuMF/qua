@@ -189,7 +189,7 @@ class BaseProvider:
                     "PretUnitar": 100.00,  # Required: Unit price
                     "PretTotal": 200.00,  # Optional: Total price (use if calculating in reverse)
                     "NrProduse": 2.0,  # Required: Number of products
-                    "CotaTVA": 19.0,  # Required: VAT rate
+                    "CotaTVA": "19.0",  # Required: VAT rate
                     "UM": "BUC",  # Required: Unit of measure (e.g., BUC for pieces)
                     "Descriere": "This is a detailed description of the product",  # Optional: Item description
                     # "CodGestiune": "MGMT123",  # Optional: Management code (if available)
