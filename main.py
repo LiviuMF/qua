@@ -40,9 +40,6 @@ st.title("Extract products from invoice")
 provider = st.selectbox('Please select provider below', PROVIDER_MAPPING.keys())
 document = st.file_uploader("Upload File")
 
-if st.button("Create invoice"):
-    response = BaseProvider.create_invoice()
-    st.success(f"invoice created with response: {response.content}")
 
 def run():
     provider_class = PROVIDER_MAPPING[provider]
